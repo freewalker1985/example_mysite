@@ -27,8 +27,12 @@ def post_detail(request, year, month, day, post):
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
-            
-    return render(request, 'blog/post/detail.html', {'post': post})
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+    return render(request, 'blog/post/detail.html', {'post': post, 'comment_form': comment_form, 'new_comment': new_comment})
 
 
 class PostListView(ListView):
